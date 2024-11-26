@@ -3,7 +3,7 @@ name: Build and Test Svelte Application
 on: 
   push:
     branches:
-      - "**"  # Trigger bij elke push naar elke branch
+      - "**"  #1.2 Trigger bij elke push naar elke branch
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
 
       # 4. Voer het buildproces uit
       - name: Build the Svelte application
-        run: npm run build
+        run: npm run build #2.2 als de npm run build stap slaagt, levert dit een werkende build.
 
       # 5. (Optioneel) Voer tests uit
       # - name: Run tests
