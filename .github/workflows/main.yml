@@ -31,3 +31,7 @@ jobs:
       # 5. (Optioneel) Voer tests uit
     #  - name: Run smoke test
     #     run: npm run test:smoke
+
+# 6. run linter          
+- name: Run linter
+        run: npm run lint
