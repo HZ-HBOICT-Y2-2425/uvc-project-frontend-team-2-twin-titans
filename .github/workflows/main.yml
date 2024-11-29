@@ -29,9 +29,9 @@ jobs:
         run: npm run build #2.2 als de npm run build stap slaagt, levert dit een werkende build.
 
       # 5. (Optioneel) Voer tests uit
-    #  - name: Run smoke test
-    #     run: npm run test:smoke
+      # - name: Run smoke test
+      #   run: npm run test:smoke
 
-# 6. run linter          
-- name: Run linter
+      # 6. Voer de linter uit
+      - name: Run linter
         run: npm run lint
