@@ -26,7 +26,7 @@ export default [
       // Dit kan voorkomen in gegenereerde of tijdelijke code, maar de waarschuwing kan vaak onterecht zijn voor bepaalde gevallen.
 
       // 7. 'no-empty' uitschakelen
-      "no-empty": "on", // Schakelt de regel uit die waarschuwt voor lege blokken (bijvoorbeeld `{}`). 
+      "no-empty": "off", // Schakelt de regel uit die waarschuwt voor lege blokken (bijvoorbeeld `{}`). 
       // Dit komt vaak voor in auto gegenereerde code of tijdelijke constructies waar een blok wel moet bestaan maar leeg is.
 
       // 8. 'no-useless-escape' uitschakelen
