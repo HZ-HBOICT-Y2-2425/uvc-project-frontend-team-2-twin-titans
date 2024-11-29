@@ -32,6 +32,10 @@ jobs:
       # - name: Run smoke test
       #   run: npm run test:smoke
 
-      # 6. Voer de linter uit
-      - name: Run linter
+      # 6. Installeer ESLint v8
+      - name: Install ESLint v8
+        run: npm install eslint@^8.0.0 --save-dev
+
+      # 7. Run ESLint
+      - name: Run ESLint
         run: npm run lint
