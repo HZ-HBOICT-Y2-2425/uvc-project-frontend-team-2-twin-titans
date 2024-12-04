@@ -5,18 +5,18 @@
 
   // State for each dropdown
   let dropdownStates = {
-    Vegetables: false,
-    Allergies: false,
-    Season: false,
-    Likes: false,
+    Groentes: false,
+    Allergieën: false,
+    Seizoen: false,
+    VindIkLeuks: false,
   };
 
   // Define dropdown content for each key
   const dropdownContent = {
-    Vegetables: ["Carrot", "Broccoli", "Spinach"],
-    Allergies: ["Peanuts", "Shellfish", "Dairy"],
-    Season: ["Apple", "Banana", "Cherry"],
-    Likes: ["Water", "Juice", "Soda"],
+    vegetables: ["Carrot", "Broccoli", "Spinach"],
+    allergies: ["Peanuts", "Shellfish", "Dairy"],
+    season: ["Apple", "Banana", "Cherry"],
+    likes: ["Water", "Juice", "Soda"],
   };
 
   let query = ""; // Holds the search input value
@@ -73,19 +73,19 @@
   <input
     type="text"
     bind:value={query}
-    placeholder="Search..."
+    placeholder="Zoeken..."
     class="border border-black px-4 py-2 rounded-l w-full focus:border-black focus:outline-none outline-none border-2 border-r-0"
   />
   <button
     on:click={handleSearch}
     class="px-4 py-2 bg-zinc-200 text-black rounded-r border-2 border-black"
   >
-    Search
+    Zoeken
   </button>
 </div>
 
 <!-- Dropdown Menus -->
-<div class="grid grid-cols-2 mx-auto justify-center gap-6 max-w-[50%] mt-20">
+<div class="grid grid-cols-2 mx-auto justify-center gap-6 max-w-[42%] mt-20">
   {#each Object.keys(dropdownStates) as key (key)}
     <div class="flex items-center justify-center text-center relative">
       <div class="dropdown">
@@ -122,11 +122,12 @@
     <p>Loading recipes...</p>
   {:else}
     {#each recipes as recipe}
-      <button
+      <a
+        href={`/recepten/${recipe.id}`}
         class="btn px-4 py-2 border-2 border-black bg-green-500 rounded min-w-[8vw] text-center text-white"
       >
         {recipe.name}
-      </button>
+      </a>
     {/each}
   {/if}
 </div>
