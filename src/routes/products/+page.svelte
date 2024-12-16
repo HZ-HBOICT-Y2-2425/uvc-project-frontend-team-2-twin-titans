@@ -1,6 +1,9 @@
 <script>
+// @ts-nocheck
+
     import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import ProductFilter from '$lib/components/filter/ProductsFilter.svelte';
 
   let products = [];
   let isLoading = true;
@@ -57,30 +60,13 @@
   </div>
 
   {#if isLoading}
-    <p class="text-center text-gray-600">Producten worden geladen...</p>
+    <p class="text-center text-gray-600 mt-8">Producten worden geladen...</p>
   {:else if error}
     <p class="text-center text-red-600">{error}</p>
-  {:else if products.length > 0}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {#each products as product (product.id)}
-        <div
-          class="border-2 border-gray-300 rounded-lg overflow-hidden bg-gray-100 transition-transform transform hover:translate-y-[-5px] hover:shadow-lg cursor-pointer"
-          on:click={() => window.location.href = `/products/${product.id}`}
-        >
-          <img
-            src="https://via.placeholder.com/400x200"
-            alt="{product.title}"
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-4">
-            <h2 class="text-lg font-bold text-green-700 mb-2">{product.title}</h2>
-            <p class="text-green-700 font-bold text-base mb-2">${product.price.toFixed(2)}</p>
-            <p class="text-gray-700 text-sm truncate">{product.description.slice(0, 100)}...</p>
-          </div>
-        </div>
-      {/each}
-    </div>
   {:else}
-    <p class="text-center text-gray-600">Geen producten gevonden...</p>
+    <div class="container mx-auto p-4">
+      <!-- Producten worden via de Filter component gefilterd en weergegeven! -->
+      <ProductFilter {products} />
+    </div>
   {/if}
 </div>

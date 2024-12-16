@@ -1,8 +1,11 @@
 <script>
+// @ts-nocheck
+
   import { user } from '$lib/store'; 
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';  
   import '../app.css';
+  import CO2Output from '$lib/components/co2/CO2Output.svelte';
 
   let categories = [
     {
@@ -69,6 +72,9 @@
       />
     </div>
   </section>
+  
+  <!-- Bespaarde CO2 Uitstoot -->
+  <CO2Output />
 
   <!-- Categorieen Section -->
   <section class="px-4 md:px-16">
