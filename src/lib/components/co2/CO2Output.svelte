@@ -9,10 +9,6 @@
         <!-- Als de gebruiker is ingelogd, laat de CO₂ contributie zien -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <p class="text-gray-700 text-lg">
-                <span class="font-semibold text-gray-900">Naam:</span> {$user.name}
-            </p>
-
-            <p class="text-gray-700 text-lg">
                 <span class="font-semibold text-gray-900">CO₂ Contributie:</span> {$user.co2Contribution} kg
             </p>
         </div>

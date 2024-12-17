@@ -12,6 +12,9 @@
     let showDropdown = false;
     let userID = 1; // Assuming a dummy userID
 
+    let categories = []; // Add a state variable to hold categories
+    let allergiesList = []; // Add a state variable to hold allergies list
+
     // Apply filters whenever the user changes a filter
     function applyFilter() {
         filteredProducts = [...products];
@@ -44,11 +47,16 @@
     // Fetch and populate consumables and allergies lists
     async function fetchData() {
         try {
-            const consumablesRes = await fetch('http://localhost:3015/consumables');
-            if (!consumablesRes.ok) throw new Error('Fout bij het ophalen van consumables');
-            consumablesList = await consumablesRes.json();
+            const response = await fetch('http://localhost:3010/categories/consumables/');
+            if (!response.ok) {
+                throw new Error('Gefaald om product URLs te laden');
+            }
 
-            const allergiesRes = await fetch('http://localhost:3015/allergies');
+            const categoriesData = await response.json(); // Parse the response as JSON
+            console.log('Categories ontvangen:', categoriesData);
+            categories = categoriesData; // Update categories state with fetched data
+
+            const allergiesRes = await fetch('http://localhost:3010/allergies');
             if (!allergiesRes.ok) throw new Error('Fout bij het ophalen van allergieën');
             allergiesList = await allergiesRes.json();
         } catch (error) {
@@ -59,7 +67,6 @@
     // Ensure filters are applied when the component loads or products are updated
     $: applyFilter();
     $: fetchData();
-
 </script>
 
 <div class="filter-section mb-6">
@@ -74,8 +81,8 @@
                 class="border p-2 rounded w-full"
             >
                 <option value="">Alle categorieën</option>
-                {#each [...new Set(products.map((p) => p.consumables))] as category}
-                    <option value={category}>{category}</option>
+                {#each categories as category}
+                    <option value={category.id}>{category.name}</option>
                 {/each}
             </select>
         </div>
