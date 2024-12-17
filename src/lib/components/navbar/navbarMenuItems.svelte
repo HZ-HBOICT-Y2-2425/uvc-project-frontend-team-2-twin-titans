@@ -7,7 +7,7 @@
     ];
 </script>
 
-<div class="flex justify-evenly w-full sm:w-auto text-xs sm:text-sm">
+<div class="flex justify-evenly w-full sm:w-auto text-xs sm:text-sm z-10">
     {#each menuItems as item}
         <a href={item.href} class="flex flex-col items-center text-white text-xs sm:text-sm hover:bg-white hover:text-green-700 px-2 py-1 rounded">
             <i class={`fa ${item.icon} text-2xl`} aria-hidden="true"></i>
