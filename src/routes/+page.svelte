@@ -7,7 +7,7 @@
 
   let categories = [];
   let displayedCategories = [];
-  let showMore = true;
+  let showMore = false; // Default to false, showing only 4 categories
   let products = [];
   let error = null;
 
