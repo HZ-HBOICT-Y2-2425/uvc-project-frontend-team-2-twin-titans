@@ -1,68 +1,52 @@
 <script>
-// @ts-nocheck
-
-  import { user } from '$lib/store'; 
   import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';  
+  import { goto } from '$app/navigation';
+  import { user } from '$lib/store';
   import '../app.css';
   import CO2Output from '$lib/components/co2/CO2Output.svelte';
 
-  let categories = [
-    {
-      title: "Groenten",
-      image: "/images/groenten.png",
-      description: "Verse en gezonde groenten direct van de boer.",
-    },
-    {
-      title: "Zetmeel",
-      image: "/images/zetmeel.png",
-      description: "Producten die zetmeel en granen bevatten.",
-    },
-    {
-      title: "Zuivel",
-      image: "/images/zuivel.png",
-      description: "Biologische melk, kaas en meer.",
-    },
-    {
-      title: "Vlees",
-      image: "/images/eiwitten.png",
-      description: "Lokale en duurzame vleesproducten.",
-    },
-  ];
-
-  $: userID = $user?.id || 1; // Dummy userID als fallback
+  let categories = [];
+  let displayedCategories = [];
+  let showMore = true;
   let products = [];
   let error = null;
 
-  // Haal de producten op van de API die specifiek door deze gebruiker zijn toegevoegd
+  $: userID = $user?.id || 1; // Fallback to dummy userID if not available
+
   onMount(async () => {
     try {
-      const userResponse = await fetch(`http://localhost:3013/user/${userID}`);
-      if (!userResponse.ok) {
-        throw new Error('Kon producten niet laden.');
+      const [categoriesResponse, userResponse] = await Promise.all([
+        fetch('http://localhost:3010/categories/consumables/'),
+        fetch(`http://localhost:3013/user/${userID}`)
+      ]);
+
+      if (!categoriesResponse.ok || !userResponse.ok) {
+        throw new Error('Failed to load data');
       }
 
+      categories = await categoriesResponse.json();
       products = await userResponse.json();
-      console.log("Producten van gebruiker:", products); 
 
-      const response = await fetch('http://localhost:3010/categories/consumables/');
-        if (!response.ok) {
-            throw new Error('Gefaald om product URLs te laden');
-        }
-
-        const categoriesData = await response.json(); // Parse the response as JSON
-        console.log('Categories ontvangen:', categoriesData);
-        categories = categoriesData; // Update categories state with fetched data
+      // Initialize displayedCategories based on showMore
+      displayedCategories = showMore ? categories : categories.slice(0, 4);
     } catch (err) {
-      console.error('Fout bij het laden van producten:', err);
-      error = 'Kon jouw producten niet ophalen. Probeer het later opnieuw.';
+      console.error('Error loading data:', err);
+      error = 'Failed to load data. Please try again later.';
     }
   });
 
-  // Navigeer naar de product detailpagina met dynamisch productID
-  const viewProductDetails = (productId) => {
-    goto(`/products/${productId}`);  // Navigeer naar de detailpagina met het productID
-  };
+  function updateDisplayedCategories() {
+    displayedCategories = showMore ? categories : categories.slice(0, 4);
+  }
+
+  function toggleCategories() {
+    showMore = !showMore;
+    displayedCategories = showMore ? categories : categories.slice(0, 4);
+  }
+
+  function viewProductDetails(productId) {
+    goto(`/products/${productId}`);
+  }
 </script>
 
 <div class="min-h-screen bg-gray-50 flex flex-col space-y-12">
@@ -86,30 +70,27 @@
   <CO2Output />
 
   <!-- Categorieën Section -->
-  <section class="px-4 md:px-16 z-1">
+  <section class="px-4 md:px-16">
     <h2 class="text-3xl font-bold text-left mb-6">Categorieën</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 z-1">
-      {#each categories as category}
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {#each displayedCategories as category (category.id)}
         <div
           class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg duration-300"
-          on:click={() => goto(`/products/`)}
-          on:keydown={(e) => e.key === 'Enter' && goto(`/products/`)}
+          on:click={() => goto(`/products/${category.id}`)}
+          on:keydown={(e) => e.key === 'Enter' && goto(`/products/${category.id}`)}
           role="button"
           tabindex="0"
         >
-          <!-- Image Section -->
           <img
-            src="/images/groenten.png"
+            src="/images/{category.name}.png"
             alt={category.name}
             class="h-60 w-full object-cover hover:opacity-90 transition-opacity duration-300"
           />
-  
-          <!-- Text Content -->
-          <div class="p-4 z-1">
+          <div class="p-4">
             <h3 class="text-lg font-bold text-gray-800 mb-2">{category.name}</h3>
-            <p class="text-gray-600 text-sm">{category.id}</p>
+            <p class="text-gray-600 text-sm">{category.description || ''}</p>
             <a
-              href={`/products/`}
+              href={`/products/${category.id}`}
               class="mt-2 inline-block text-[#69A571] hover:underline"
             >
               Bekijk {category.name}
@@ -118,7 +99,18 @@
         </div>
       {/each}
     </div>
-  </section>  
+
+    {#if categories.length > 4}
+      <div class="mt-6 flex justify-center">
+        <button
+          class="bg-[#63AD6C] text-white px-4 py-2 rounded-md transition-transform transform hover:scale-105 hover:shadow-md duration-300"
+          on:click={toggleCategories}
+        >
+          {showMore ? 'Laat minder categorieën zien' : 'Meer categorieën weergeven'}
+        </button>
+      </div>
+    {/if}
+  </section>
 
   <!-- Producten van de gebruiker Section -->
   <section class="px-4 md:px-16">
@@ -127,7 +119,7 @@
       <p class="text-red-600">{error}</p>
     {:else if products.length > 0}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {#each products as product}
+        {#each products as product (product.id)}
           <div class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <img src={product.image || 'https://via.placeholder.com/300'} alt={product.title} class="h-60 w-full object-cover" />
             <div class="p-4">
@@ -141,7 +133,7 @@
                 <p class="text-red-500 text-sm">Gereserveerd door gebruiker {product.reservedByUserID}</p>
               {/if}
               <button
-                class="mt-4 bg-[#69A571] text-white px-4 py-2 rounded-md"
+                class="mt-4 bg-[#69A571] text-white px-4 py-2 rounded-md hover:bg-[#5a8f61] transition-colors duration-300"
                 on:click={() => viewProductDetails(product.id)}
               >
                 Bekijk details
@@ -161,7 +153,6 @@
       <h2 class="text-3xl font-bold">Meer over FoodieFuse</h2>
       <p class="text-lg text-gray-600">Fuse your Finds, with Hungry Minds!</p>
       <p class="text-gray-600">
-        <!-- Placeholder for additional text -->
         Bij FoodieFuse geloven we in de kracht van verbinding en duurzaamheid. Ons platform is er om buurten samen te brengen, mensen te helpen elkaar te ondersteunen en gezamenlijk voedselverspilling tegen te gaan. Heb je een ingrediënt nodig, maar mis je dat ene product in je keukenkastje? Geen zorgen! Met FoodieFuse kun je eenvoudig in contact komen met buren die het wel in huis hebben, zodat je jouw kookplannen niet hoeft te wijzigen.
         <br><br>
         Wij vinden het belangrijk om lokale gemeenschappen te versterken en tegelijkertijd onze impact op het milieu te verkleinen. Door producten te delen, verminderen we niet alleen voedselverspilling, maar dragen we ook bij aan het verminderen van CO2-uitstoot. Elke keer dat we samen werken, sparen we transportkilometers uit en zorgen we voor minder afval.
@@ -170,7 +161,7 @@
       </p>
     </div>
     <div class="md:w-1/2">
-      <img src="/images/over-ons.png" alt="FoodieFuse" class="rounded-lg shadow-md" />
+      <img src="/images/over-ons.png" alt="FoodieFuse" class="rounded-lg shadow-md w-full h-auto" />
     </div>
   </section>
 </div>
