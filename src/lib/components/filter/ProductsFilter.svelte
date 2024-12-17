@@ -1,8 +1,9 @@
 <script>
-    // Props passed to the component
+    import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
+
     export let products = [];
     
-    // Local state
     let filteredProducts = [...products];
     let selectedCategory = '';
     let selectedAllergies = [];
@@ -12,31 +13,9 @@
     let showDropdown = false;
     let userID = 1; // Assuming a dummy userID
 
-    let categories = []; // Add a state variable to hold categories
-    let allergiesList = []; // Add a state variable to hold allergies list
+    let categories = [];
+    let allergiesList = [];
 
-    // Apply filters whenever the user changes a filter
-    function applyFilter() {
-        filteredProducts = [...products];
-    
-        // Apply category filter
-        if (selectedCategory) {
-            filteredProducts = filteredProducts.filter((product) => product.consumables === selectedCategory);
-        }
-    
-        // Apply allergy filter
-        if (selectedAllergies.length > 0) {
-            filteredProducts = filteredProducts.filter((product) =>
-                selectedAllergies.every((allergy) => product.allergies?.includes(allergy))
-            );
-        }
-    
-        // Apply price filter
-        if (maxPrice !== null) {
-            filteredProducts = filteredProducts.filter((product) => product.price <= maxPrice);
-        }
-    }
-    
     // Fetch and populate consumables and allergies lists
     async function fetchData() {
         try {
@@ -45,9 +24,8 @@
                 throw new Error('Gefaald om product URLs te laden');
             }
 
-            const categoriesData = await response.json(); // Parse the response as JSON
-            console.log('Categories ontvangen:', categoriesData);
-            categories = categoriesData; // Update categories state with fetched data
+            const categoriesData = await response.json();
+            categories = categoriesData;
 
             const allergiesRes = await fetch('http://localhost:3010/allergies');
             if (!allergiesRes.ok) throw new Error('Fout bij het ophalen van allergieën');
@@ -57,7 +35,38 @@
         }
     }
 
-    // Ensure filters are applied when the component loads or products are updated
+    // Apply filters whenever the user changes a filter
+    function applyFilter() {
+        filteredProducts = [...products];
+
+        if (selectedCategory) {
+            filteredProducts = filteredProducts.filter(product => product.consumables === selectedCategory);
+        }
+
+        if (selectedAllergies.length > 0) {
+            filteredProducts = filteredProducts.filter(product =>
+                selectedAllergies.every(allergy => product.allergies?.includes(allergy))
+            );
+        }
+
+        if (maxPrice !== null) {
+            filteredProducts = filteredProducts.filter(product => product.price <= maxPrice);
+        }
+
+        updateURL();
+    }
+
+    // Update URL based on selected filters
+    function updateURL() {
+        let url = '/products?';
+        
+        if (selectedCategory) url += `category=${encodeURIComponent(selectedCategory)}&`;
+        if (selectedAllergies.length > 0) url += `allergies=${encodeURIComponent(selectedAllergies.join(','))}&`;
+        if (maxPrice !== null) url += `maxPrice=${encodeURIComponent(maxPrice)}`;
+
+        goto(url);
+    }
+
     $: applyFilter();
     $: fetchData();
 </script>
@@ -75,7 +84,7 @@
             >
                 <option value="">Alle categorieën</option>
                 {#each categories as category}
-                    <option value={category.id}>{category.name}</option>
+                    <option value={category.name}>{category.name}</option>
                 {/each}
             </select>
         </div>
@@ -101,7 +110,7 @@
                                     checked={selectedAllergies.includes(allergy.id)}
                                     on:change={() => {
                                         if (selectedAllergies.includes(allergy.id)) {
-                                            selectedAllergies = selectedAllergies.filter((a) => a !== allergy.id);
+                                            selectedAllergies = selectedAllergies.filter(a => a !== allergy.id);
                                         } else {
                                             selectedAllergies = [...selectedAllergies, allergy.id];
                                         }
