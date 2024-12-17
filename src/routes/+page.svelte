@@ -54,8 +54,8 @@
   <section class="flex flex-col items-center justify-center text-center py-16 bg-white">
     <p class="text-gray-500 text-lg">Fuse your Finds, with Hungry Minds</p>
     <h1 class="text-4xl md:text-6xl font-bold">
-      <span class="text-black">Jouw</span>
-      <span class="text-[#69A571]">overblijvers</span>
+      <span class="text-[#69A571]">Producten</span>
+      <span class="text-black">in de buurt</span>
     </h1>
     <div class="relative mt-8 w-full max-w-md">
       <input
@@ -76,8 +76,8 @@
       {#each displayedCategories as category (category.id)}
         <div
           class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg duration-300"
-          on:click={() => goto(`/products/${category.id}`)}
-          on:keydown={(e) => e.key === 'Enter' && goto(`/products/${category.id}`)}
+          on:click={() => goto(`/products/`)}
+          on:keydown={(e) => e.key === 'Enter' && goto(`/products/`)}
           role="button"
           tabindex="0"
         >
