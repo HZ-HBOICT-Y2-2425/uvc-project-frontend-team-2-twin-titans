@@ -37,13 +37,22 @@
   // Haal de producten op van de API die specifiek door deze gebruiker zijn toegevoegd
   onMount(async () => {
     try {
-      const response = await fetch(`http://localhost:3013/user/${userID}`);
-      if (!response.ok) {
+      const userResponse = await fetch(`http://localhost:3013/user/${userID}`);
+      if (!userResponse.ok) {
         throw new Error('Kon producten niet laden.');
       }
 
-      products = await response.json();
+      products = await userResponse.json();
       console.log("Producten van gebruiker:", products); 
+
+      const response = await fetch('http://localhost:3010/categories/consumables/');
+        if (!response.ok) {
+            throw new Error('Gefaald om product URLs te laden');
+        }
+
+        const categoriesData = await response.json(); // Parse the response as JSON
+        console.log('Categories ontvangen:', categoriesData);
+        categories = categoriesData; // Update categories state with fetched data
     } catch (err) {
       console.error('Fout bij het laden van producten:', err);
       error = 'Kon jouw producten niet ophalen. Probeer het later opnieuw.';
@@ -82,7 +91,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 z-1">
       {#each categories as category}
         <div
-          class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform transform hover:-translate-y-2 hover:shadow-lg"
+          class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg duration-300"
           on:click={() => goto(`/products/`)}
           on:keydown={(e) => e.key === 'Enter' && goto(`/products/`)}
           role="button"
@@ -90,26 +99,26 @@
         >
           <!-- Image Section -->
           <img
-            src={category.image}
-            alt={category.title}
+            src="/images/groenten.png"
+            alt={category.name}
             class="h-60 w-full object-cover hover:opacity-90 transition-opacity duration-300"
           />
-
+  
           <!-- Text Content -->
           <div class="p-4 z-1">
-            <h3 class="text-lg font-bold text-gray-800 mb-2">{category.title}</h3>
-            <p class="text-gray-600 text-sm">{category.description}</p>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">{category.name}</h3>
+            <p class="text-gray-600 text-sm">{category.id}</p>
             <a
-              href={`/category/`}
+              href={`/products/`}
               class="mt-2 inline-block text-[#69A571] hover:underline"
             >
-              Bekijk {category.title}
+              Bekijk {category.name}
             </a>
           </div>
         </div>
       {/each}
     </div>
-  </section>
+  </section>  
 
   <!-- Producten van de gebruiker Section -->
   <section class="px-4 md:px-16">
