@@ -76,8 +76,8 @@
       {#each displayedCategories as category (category.id)}
         <div
           class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg duration-300"
-          on:click={() => goto(`/products/`)}
-          on:keydown={(e) => e.key === 'Enter' && goto(`/products/`)}
+          on:click={() => goto(`/products?category=${category.name}`)}
+          on:keydown={(e) => e.key === 'Enter' && goto(`/products?category=${category.name}`)}
           role="button"
           tabindex="0"
         >
@@ -90,7 +90,7 @@
             <h3 class="text-lg font-bold text-gray-800 mb-2">{category.name}</h3>
             <p class="text-gray-600 text-sm">{category.description || ''}</p>
             <a
-              href={`/products/${category.id}`}
+              href={`/products?category=${category.name}`}
               class="mt-2 inline-block text-[#69A571] hover:underline"
             >
               Bekijk {category.name}
