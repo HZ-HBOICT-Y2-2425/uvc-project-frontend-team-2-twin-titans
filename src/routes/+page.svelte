@@ -76,21 +76,41 @@
   <!-- Bespaarde CO2 Uitstoot -->
   <CO2Output />
 
-  <!-- Categorieen Section -->
+  <!-- Categorieën Section -->
   <section class="px-4 md:px-16">
-    <h2 class="text-3xl font-bold text-left mb-6">Categorieen</h2>
+    <h2 class="text-3xl font-bold text-left mb-6">Categorieën</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {#each categories as category}
-        <div class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-          <img src={category.image} alt={category.title} class="h-60 w-full object-cover" />
+        <div
+          class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform transform hover:-translate-y-2 hover:shadow-lg"
+          on:click={() => goto(`/products/`)}
+          on:keydown={(e) => e.key === 'Enter' && goto(`/products/`)}
+          role="button"
+          tabindex="0"
+        >
+          <!-- Image Section -->
+          <img
+            src={category.image}
+            alt={category.title}
+            class="h-60 w-full object-cover hover:opacity-90 transition-opacity duration-300"
+          />
+
+          <!-- Text Content -->
           <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">{category.title}</h3>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">{category.title}</h3>
             <p class="text-gray-600 text-sm">{category.description}</p>
+            <a
+              href={`/category/`}
+              class="mt-2 inline-block text-[#69A571] hover:underline"
+            >
+              Bekijk {category.title}
+            </a>
           </div>
         </div>
       {/each}
     </div>
   </section>
+
 
   <!-- Producten van de gebruiker Section -->
   <section class="px-4 md:px-16">
