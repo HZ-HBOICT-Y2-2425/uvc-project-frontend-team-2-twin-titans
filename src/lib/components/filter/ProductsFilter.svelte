@@ -35,13 +35,6 @@
         if (maxPrice !== null) {
             filteredProducts = filteredProducts.filter((product) => product.price <= maxPrice);
         }
-    
-        // Apply amount filter
-        if (minAmount !== null && selectedUnit) {
-            filteredProducts = filteredProducts.filter((product) =>
-                product.amount >= minAmount && product.unit === selectedUnit
-            );
-        }
     }
     
     // Fetch and populate consumables and allergies lists
@@ -135,34 +128,6 @@
                 class="border p-2 rounded w-full"
                 placeholder="Max Prijs"
             />
-        </div>
-
-        <!-- Amount and Unit Filter -->
-        <div>
-            <label for="amount" class="block text-sm font-medium mb-1">Min Hoeveelheid:</label>
-            <input
-                id="amount"
-                type="number"
-                min="0"
-                bind:value={minAmount}
-                on:input={applyFilter}
-                class="border p-2 rounded w-full"
-                placeholder="Min Hoeveelheid"
-            />
-        </div>
-        <div>
-            <label for="unit" class="block text-sm font-medium mb-1">Eenheid:</label>
-            <select
-                id="unit"
-                bind:value={selectedUnit}
-                on:change={applyFilter}
-                class="border p-2 rounded w-full"
-            >
-                <option value="">Alle eenheden</option>
-                {#each [...new Set(products.map((p) => p.unit))] as unit}
-                    <option value={unit}>{unit}</option>
-                {/each}
-            </select>
         </div>
     </div>
 
