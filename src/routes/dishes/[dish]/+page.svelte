@@ -50,7 +50,7 @@
   // Reviews ophalen
   async function fetchReviews() {
     try {
-      const response = await fetch(`http://localhost:3016/recipe/${dish}`);
+      const response = await fetch(`http://localhost:3010/reviews/recipe/${dish}`);
       if (response.ok) {
         reviews = await response.json();
         calculateAverageReview();
