@@ -74,11 +74,17 @@
 {:else}
   <div class="max-w-md mx-auto p-4">
     <h1 class="text-2xl font-bold text-custom-green text-center mb-6">Schrijf een Beoordeling</h1>
+    
+    <!-- Algemene uitleg onder de titel -->
+    <p class="text-center text-sm text-gray-600 mb-4">
+      Beoordeel dit recept op basis van kosten, moeilijkheid en smaak. Vul de onderstaande velden in om je mening te geven.
+    </p>
 
     <form on:submit|preventDefault={submitReview} class="space-y-6">
       <!-- Kosten input -->
       <div class="flex flex-col">
         <label for="costRating" class="text-lg font-medium text-gray-700 mb-2">Kosten:</label>
+        <p class="text-sm text-gray-500 mb-2">Beoordeel de kosten van het recept op een schaal van 1 tot 5, waarbij 1 staat voor 'zeer goedkoop' en 5 voor 'zeer duur'.</p>
         <input 
           type="number" 
           id="costRating" 
@@ -96,6 +102,7 @@
       <!-- Moeilijkheid input -->
       <div class="flex flex-col">
         <label for="difficultyRating" class="text-lg font-medium text-gray-700 mb-2">Moeilijkheid:</label>
+        <p class="text-sm text-gray-500 mb-2">Beoordeel de moeilijkheid van het recept op een schaal van 1 tot 5, waarbij 1 staat voor 'heel makkelijk' en 5 voor 'zeer moeilijk'.</p>
         <input 
           type="number" 
           id="difficultyRating" 
@@ -113,6 +120,7 @@
       <!-- Smaak input -->
       <div class="flex flex-col">
         <label for="tasteRating" class="text-lg font-medium text-gray-700 mb-2">Smaak:</label>
+        <p class="text-sm text-gray-500 mb-2">Beoordeel de smaak van het recept op een schaal van 1 tot 5, waarbij 1 staat voor 'slecht' en 5 voor 'uitstekend'.</p>
         <input 
           type="number" 
           id="tasteRating" 
