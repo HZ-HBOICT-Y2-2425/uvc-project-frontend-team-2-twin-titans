@@ -3,7 +3,7 @@
   import { goto } from "$app/navigation";
   import { getData, getDataUrls } from '$lib/dataHandler';
   import AddProductBtn from '$lib/components/product/addProductBtn.svelte';
-  import ProductOverviewCard from '$lib/components/product/ProductOverviewCard.svelte';
+  import ProductOverviewCard from '$lib/components/product/productOverviewCard.svelte';
 
   let products = [];
   let isLoading = true;

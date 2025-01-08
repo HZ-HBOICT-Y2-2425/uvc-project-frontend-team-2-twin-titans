@@ -4,8 +4,8 @@
     import { goto } from "$app/navigation";
 
     let title = "";
-    let consumables = ""; 
-    let selectedAllergies = []; 
+    let consumables = "";
+    let selectedAllergies = [];
     let price = "";
     let amount = "";
     let unit = "";
@@ -60,7 +60,7 @@
         errors.description = !description;
     }
 
-    // Product toevoegen 
+    // Product toevoegen
     async function addProduct() {
         validateFields();
         if (Object.values(errors).includes(true)) {
@@ -70,18 +70,21 @@
 
         try {
             const productData = {
-                userID, 
-                title, 
-                consumables, 
-                allergies: selectedAllergies.length > 0 ? selectedAllergies.join(",") : "", 
-                price: parseFloat(price), 
-                amount: parseFloat(amount), 
+                userID,
+                title,
+                consumables,
+                allergies:
+                    selectedAllergies.length > 0
+                        ? selectedAllergies.join(",")
+                        : "",
+                price: parseFloat(price),
+                amount: parseFloat(amount),
                 unit,
-                description, 
+                description,
             };
 
             const formData = new FormData();
-            Object.keys(productData).forEach(key => {
+            Object.keys(productData).forEach((key) => {
                 formData.append(key, productData[key]);
             });
 
@@ -97,20 +100,22 @@
             if (res.ok) {
                 showPopup = true;
                 setTimeout(() => {
-                    goto('/products');
+                    goto("/products");
                 }, 2000);
             } else {
-                alert('Fout bij het toevoegen van het product.');
+                alert("Fout bij het toevoegen van het product.");
             }
         } catch (error) {
-            console.error('Er is een fout opgetreden:', error);
+            console.error("Er is een fout opgetreden:", error);
         }
     }
 
     // Toggle voor het toevoegen/verwijderen van allergieën
     function toggleAllergy(allergyId) {
         if (selectedAllergies.includes(allergyId)) {
-            selectedAllergies = selectedAllergies.filter(id => id !== allergyId);
+            selectedAllergies = selectedAllergies.filter(
+                (id) => id !== allergyId,
+            );
         } else {
             selectedAllergies.push(allergyId);
         }
@@ -130,18 +135,24 @@
             <input
                 id="title"
                 bind:value={title}
-                class="border p-2 w-full {errors.title ? 'border-red-500' : 'border-gray-300'}"
+                class="border p-2 w-full {errors.title
+                    ? 'border-red-500'
+                    : 'border-gray-300'}"
                 type="text"
                 placeholder="Titel"
                 required
             />
         </div>
         <div>
-            <label for="consumables" class="block mb-1 font-medium">Categorie:</label>
+            <label for="consumables" class="block mb-1 font-medium"
+                >Categorie:</label
+            >
             <select
                 id="consumables"
                 bind:value={consumables}
-                class="border p-2 w-full {errors.consumables ? 'border-red-500' : 'border-gray-300'}"
+                class="border p-2 w-full {errors.consumables
+                    ? 'border-red-500'
+                    : 'border-gray-300'}"
                 required
             >
                 <option value="" disabled>Selecteer een categorie</option>
@@ -151,7 +162,11 @@
             </select>
         </div>
         <div>
-            <label for="allergies" class="block text-sm font-medium text-gray-700 mb-1">Allergieën</label>
+            <label
+                for="allergies"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Allergieën</label
+            >
             <div class="relative">
                 <button
                     type="button"
@@ -165,13 +180,19 @@
                     {/if}
                 </button>
                 {#if showDropdown}
-                    <div class="absolute z-10 bg-white border rounded-md shadow-lg mt-2 w-full max-h-60 overflow-y-auto">
+                    <div
+                        class="absolute z-10 bg-white border rounded-md shadow-lg mt-2 w-full max-h-60 overflow-y-auto"
+                    >
                         {#each allergiesList as allergy}
-                            <label class="flex items-center px-4 py-2 hover:bg-gray-100">
+                            <label
+                                class="flex items-center px-4 py-2 hover:bg-gray-100"
+                            >
                                 <input
                                     type="checkbox"
                                     class="mr-2"
-                                    checked={selectedAllergies.includes(allergy.id)}
+                                    checked={selectedAllergies.includes(
+                                        allergy.id,
+                                    )}
                                     on:change={() => toggleAllergy(allergy.id)}
                                 />
                                 {allergy.name}
@@ -186,7 +207,9 @@
             <input
                 id="price"
                 bind:value={price}
-                class="border p-2 w-full {errors.price ? 'border-red-500' : 'border-gray-300'}"
+                class="border p-2 w-full {errors.price
+                    ? 'border-red-500'
+                    : 'border-gray-300'}"
                 type="number"
                 step="0.01"
                 placeholder="Prijs"
@@ -194,11 +217,15 @@
             />
         </div>
         <div>
-            <label for="amount" class="block mb-1 font-medium">Hoeveelheid:</label>
+            <label for="amount" class="block mb-1 font-medium"
+                >Hoeveelheid:</label
+            >
             <input
                 id="amount"
                 bind:value={amount}
-                class="border p-2 w-full {errors.amount ? 'border-red-500' : 'border-gray-300'}"
+                class="border p-2 w-full {errors.amount
+                    ? 'border-red-500'
+                    : 'border-gray-300'}"
                 type="number"
                 placeholder="Hoeveelheid"
                 required
@@ -209,7 +236,9 @@
             <select
                 id="unit"
                 bind:value={unit}
-                class="border p-2 w-full {errors.unit ? 'border-red-500' : 'border-gray-300'}"
+                class="border p-2 w-full {errors.unit
+                    ? 'border-red-500'
+                    : 'border-gray-300'}"
                 required
             >
                 <option value="" disabled>Selecteer een eenheid</option>
@@ -220,11 +249,15 @@
             </select>
         </div>
         <div>
-            <label for="description" class="block mb-1 font-medium">Beschrijving:</label>
+            <label for="description" class="block mb-1 font-medium"
+                >Beschrijving:</label
+            >
             <textarea
                 id="description"
                 bind:value={description}
-                class="border p-2 w-full {errors.description ? 'border-red-500' : 'border-gray-300'}"
+                class="border p-2 w-full {errors.description
+                    ? 'border-red-500'
+                    : 'border-gray-300'}"
                 placeholder="Beschrijving"
                 required
             ></textarea>
@@ -232,7 +265,9 @@
 
         <!-- Afbeelding Uploaden (optioneel) -->
         <div>
-            <label for="image" class="block mb-1 font-medium">Afbeelding (optioneel):</label>
+            <label for="image" class="block mb-1 font-medium"
+                >Afbeelding (optioneel):</label
+            >
             <input
                 type="file"
                 id="image"
@@ -242,11 +277,15 @@
             />
         </div>
 
-        <button class="bg-blue-500 text-white p-2 rounded mt-4 w-full md:w-auto">Toevoegen</button>
+        <button class="bg-blue-500 text-white p-2 rounded mt-4 w-full md:w-auto"
+            >Toevoegen</button
+        >
     </form>
 
     {#if showPopup}
-        <div class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+            class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50"
+        >
             <div class="bg-white p-4 rounded shadow-md text-center">
                 <p class="text-lg font-semibold">Product toegevoegd!</p>
             </div>

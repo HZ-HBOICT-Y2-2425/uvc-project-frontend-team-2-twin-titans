@@ -4,7 +4,7 @@
   import { goto } from "$app/navigation";
   import "../app.css";
   import { getData, getDataUrls } from "$lib/dataHandler";
-  import ProductOverviewCard from "$lib/components/product/ProductOverviewCard.svelte";
+  import ProductOverviewCard from "$lib/components/product/productOverviewCard.svelte";
 
   let categories = [
     {

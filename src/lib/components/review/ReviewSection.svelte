@@ -10,7 +10,7 @@
   
   <div class="text-center mt-6">
     <h2 class="text-2xl font-bold mb-2">
-      Gemiddelde eoordeling
+      Gemiddelde beoordeling
       {#if reviews.length}
         <span class="text-sm text-gray-500">
           ({reviews.length}

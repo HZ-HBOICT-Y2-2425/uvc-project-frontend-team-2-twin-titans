@@ -4,7 +4,7 @@
   import { goto } from "$app/navigation";
   import { getData, getDataUrls, putData } from "$lib/dataHandler";
   import AddProductBtn from "$lib/components/product/addProductBtn.svelte";
-  import ProductOverviewCard from "$lib/components/product/ProductOverviewCard.svelte"; // Importeer de nieuwe component
+  import ProductOverviewCard from "$lib/components/product/productOverviewCard.svelte"; // Importeer de nieuwe component
   import RemoveReservationBtn from "$lib/components/product/removeReservationBtn.svelte";
   import AcceptReservationBtn from "$lib/components/product/acceptReservationBtn.svelte";
 
