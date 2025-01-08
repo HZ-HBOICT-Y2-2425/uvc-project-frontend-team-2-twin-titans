@@ -36,7 +36,6 @@
             if (!consumablesRes.ok)
                 throw new Error("Fout bij het ophalen van consumables");
             consumablesList = await consumablesRes.json();
-            console.log("Consumables List:", consumablesList); 
 
             const allergiesRes = await fetch(
                 "http://localhost:3010/categories/allergies",
@@ -44,7 +43,6 @@
             if (!allergiesRes.ok)
                 throw new Error("Fout bij het ophalen van allergieën");
             allergiesList = await allergiesRes.json();
-            console.log("Allergies List:", allergiesList); 
         } catch (error) {
             console.error("Er is een fout opgetreden:", error);
         }
@@ -71,7 +69,6 @@
         }
 
         try {
-            // De productdata ophalen
             const productData = {
                 userID, 
                 title, 
@@ -83,20 +80,15 @@
                 description, 
             };
 
-            console.log("Te verzenden productdata:", productData);
-
-            // Maak een FormData-object en voeg de gegevens toe
             const formData = new FormData();
             Object.keys(productData).forEach(key => {
                 formData.append(key, productData[key]);
             });
 
-            // Voeg afbeelding toe als deze is geselecteerd
             if (image) {
                 formData.append("image", image);
             }
 
-            // Verstuur de POST-aanroep met de form-data
             const res = await fetch("http://localhost:3010/products/create", {
                 method: "POST",
                 body: formData,
@@ -105,7 +97,7 @@
             if (res.ok) {
                 showPopup = true;
                 setTimeout(() => {
-                    goto('/products'); // Navigeer terug naar de productenpagina
+                    goto('/products');
                 }, 2000);
             } else {
                 alert('Fout bij het toevoegen van het product.');
@@ -126,7 +118,7 @@
 
     // Verwerken van bestand bij bestandselectie
     function handleFileChange(event) {
-        image = event.target.files[0]; // Sla het bestand op
+        image = event.target.files[0];
     }
 </script>
 
