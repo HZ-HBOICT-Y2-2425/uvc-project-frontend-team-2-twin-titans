@@ -1,8 +1,8 @@
 <script>
-  import { onMount } from 'svelte';
-  import { user } from '../../../lib/store'; // Store voor ingelogde gebruiker
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
+  import { onMount } from "svelte";
+  import { user } from "../../../lib/store"; // Store voor ingelogde gebruiker
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
 
   const { params } = $page;
   const { dish } = params;
@@ -50,7 +50,9 @@
   // Reviews ophalen
   async function fetchReviews() {
     try {
-      const response = await fetch(`http://localhost:3010/reviews/recipe/${dish}`);
+      const response = await fetch(
+        `http://localhost:3010/reviews/recipe/${dish}`,
+      );
       if (response.ok) {
         reviews = await response.json();
         calculateAverageReview();
@@ -66,7 +68,10 @@
   function calculateAverageReview() {
     if (!reviews.length) return (averageReview = null);
 
-    let totalTaste = 0, totalCost = 0, totalDifficulty = 0, totalRating = 0;
+    let totalTaste = 0,
+      totalCost = 0,
+      totalDifficulty = 0,
+      totalRating = 0;
 
     reviews.forEach((r) => {
       totalTaste += r.tasteRating || 0;
@@ -108,7 +113,8 @@
             body: JSON.stringify(itemToAdd),
           });
 
-          if (!response.ok) throw new Error("Fout bij toevoegen aan winkelwagen.");
+          if (!response.ok)
+            throw new Error("Fout bij toevoegen aan winkelwagen.");
         }
 
         addedToCart = true;
@@ -151,7 +157,9 @@
 {#if recipe}
   <!-- Notificatie -->
   {#if addedToCart}
-    <div class="mt-2 mb-4 p-3 bg-green-500 text-white text-center font-bold rounded shadow-lg">
+    <div
+      class="mt-2 mb-4 p-3 bg-green-500 text-white text-center font-bold rounded shadow-lg"
+    >
       Product toegevoegd aan de winkelwagen!
     </div>
   {/if}
@@ -168,9 +176,15 @@
   <!-- Personen Selectie -->
   <div class="flex justify-center items-center mt-4">
     <p class="font-bold mr-2">Personen:</p>
-    <button class="px-3 py-1 bg-gray-200 rounded" on:click={() => changePeople(-1)}>-</button>
+    <button
+      class="px-3 py-1 bg-gray-200 rounded"
+      on:click={() => changePeople(-1)}>-</button
+    >
     <p class="mx-2 text-lg font-bold">{people}</p>
-    <button class="px-3 py-1 bg-gray-200 rounded" on:click={() => changePeople(1)}>+</button>
+    <button
+      class="px-3 py-1 bg-gray-200 rounded"
+      on:click={() => changePeople(1)}>+</button
+    >
   </div>
 
   <!-- Grid Layout -->
@@ -181,12 +195,23 @@
       <ul>
         {#each recipe.ingredients as ingredient}
           <label class="flex items-center space-x-2 mb-2">
-            <input type="checkbox" bind:group={selectedIngredients} value={ingredient} />
-            <span>{ingredient.amount * people} {ingredient.unit} {ingredient.name}</span>
+            <input
+              type="checkbox"
+              bind:group={selectedIngredients}
+              value={ingredient}
+            />
+            <span
+              >{ingredient.amount * people}
+              {ingredient.unit}
+              {ingredient.name}</span
+            >
           </label>
         {/each}
       </ul>
-      <button class="mt-4 w-full p-2 bg-green-500 text-white rounded" on:click={addToCart}>
+      <button
+        class="mt-4 w-full p-2 bg-green-500 text-white rounded"
+        on:click={addToCart}
+      >
         Voeg toe aan winkelwagen
       </button>
     </div>
@@ -200,9 +225,19 @@
 
   <!-- Gemiddelde Review -->
   <div class="text-center mt-6">
-    <h2 class="text-2xl font-bold mb-2">Gemiddelde Beoordeling {#if reviews.length} <span class="text-sm text-gray-500">({reviews.length} reviews)</span> {/if}</h2>
+    <h2 class="text-2xl font-bold mb-2">
+      Gemiddelde Beoordeling
+      {#if reviews.length}
+        <span class="text-sm text-gray-500">
+          ({reviews.length}
+          {reviews.length === 1 ? "beoordeling" : "beoordelingen"})
+        </span>
+      {/if}
+    </h2>
     {#if averageReview}
-      <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-8">
+      <div
+        class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-8"
+      >
         <p>⭐ <strong>{averageReview.total}</strong>/5</p>
         <p>💰 Kosten: {averageReview.cost}/5</p>
         <p>⚙️ Moeilijkheid: {averageReview.difficulty}/5</p>
@@ -213,20 +248,26 @@
     {/if}
   </div>
 
-  <!-- Review Knop -->
-  <div class="flex justify-center mt-4">
-    <button
-      class="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      on:click={goToReviews}
-    >
-      Schrijf een review
-    </button>
-  </div>
+  <!-- Beoordeling Knop -->
+  {#if userId}
+    <div class="flex justify-center mt-4">
+      <button
+        class="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        on:click={goToReviews}
+      >
+        Schrijf een beoordeling
+      </button>
+    </div>
+  {/if}
 
-  <!-- Reviews Sectie -->
+  <!-- Beoordeling Sectie -->
   <div class="mt-6 px-4">
-    <h2 class="text-2xl font-bold mb-4 text-center">Reviews</h2>
+    <h2 class="text-2xl font-bold mb-4 text-center">Beoordeling</h2>
     {#if reviews.length > 0}
+      <p class="text-center text-gray-500">
+        {reviews.length}
+        {reviews.length === 1 ? "beoordeling" : "beoordelingen"}
+      </p>
       <ul class="space-y-4">
         {#each reviews as review}
           <li class="p-4 border rounded shadow">

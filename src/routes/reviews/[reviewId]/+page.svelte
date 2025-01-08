@@ -70,10 +70,10 @@
 </script>
 
 {#if existingReview}
-  <p class="text-center text-lg">Je hebt al een review voor dit recept.</p>
+  <p class="text-center text-lg">Je hebt al een Beoordeling voor dit recept.</p>
 {:else}
   <div class="max-w-md mx-auto p-4">
-    <h1 class="text-2xl font-bold text-custom-green text-center mb-6">Schrijf een review</h1>
+    <h1 class="text-2xl font-bold text-custom-green text-center mb-6">Schrijf een Beoordeling</h1>
 
     <form on:submit|preventDefault={submitReview} class="space-y-6">
       <!-- Kosten input -->
