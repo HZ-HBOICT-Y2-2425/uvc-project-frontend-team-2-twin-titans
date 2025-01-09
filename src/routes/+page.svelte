@@ -69,49 +69,6 @@
   <!-- Bespaarde CO2 Uitstoot -->
   <CO2Output />
 
-  <!-- Categorieën Section -->
-  <section class="px-4 md:px-16">
-    <h2 class="text-3xl font-bold text-left mb-6">Categorieën</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {#each displayedCategories as category (category.id)}
-        <div
-          class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg duration-300"
-          on:click={() => goto(`/products?category=${category.name}`)}
-          on:keydown={(e) => e.key === 'Enter' && goto(`/products?category=${category.name}`)}
-          role="button"
-          tabindex="0"
-        >
-          <img
-            src="/images/{category.name}.png"
-            alt={category.name}
-            class="h-60 w-full object-cover hover:opacity-90 transition-opacity duration-300"
-          />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800 mb-2">{category.name}</h3>
-            <p class="text-gray-600 text-sm">{category.description || ''}</p>
-            <a
-              href={`/products?category=${category.name}`}
-              class="mt-2 inline-block text-[#69A571] hover:underline"
-            >
-              Bekijk {category.name}
-            </a>
-          </div>
-        </div>
-      {/each}
-    </div>
-
-    {#if categories.length > 4}
-      <div class="mt-6 flex justify-center">
-        <button
-          class="bg-[#63AD6C] text-white px-4 py-2 rounded-md transition-transform transform hover:scale-105 hover:shadow-md duration-300"
-          on:click={toggleCategories}
-        >
-          {showMore ? 'Laat minder categorieën zien' : 'Meer categorieën weergeven'}
-        </button>
-      </div>
-    {/if}
-  </section>
-
   <!-- Producten van de gebruiker Section -->
   <section class="px-4 md:px-16">
     <h2 class="text-3xl font-bold text-left mb-6">Jouw toegevoegde producten</h2>
