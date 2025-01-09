@@ -3,6 +3,7 @@
   import { getData, getDataUrls } from "$lib/dataHandler";
   import AddProductBtn from "$lib/components/product/addProductBtn.svelte";
   import IndividualProductBtn from "$lib/components/product/individualProductBtn.svelte";
+  import ProductFilter from "$lib/components/filter/productFilter.svelte";
   import { page } from "$app/stores"; // SvelteKit's `page` store
   import { goto } from "$app/navigation";
   import ProductOverviewCard from "$lib/components/product/productOverviewCard.svelte";
