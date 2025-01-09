@@ -48,7 +48,7 @@
     }
   }
 
-  // Fetch reviews
+  // Reviews ophalen
   async function fetchReviews() {
     try {
       const response = await fetch(
@@ -91,7 +91,7 @@
     };
   }
 
-  // Add selected ingredients to the cart
+   // Add selected ingredients to the cart
   async function addToCart() {
     if (!selectedIngredients.length) {
       alert("Please select ingredients.");
@@ -108,10 +108,10 @@
             unit: ingredient.unit,
           };
 
-          const queryParams = new URLSearchParams(itemToAdd).toString();
-          const response = await fetch(`http://localhost:3010/user/${userId}/cart?${queryParams}`, {
+          const response = await fetch(`http://localhost:3012/${userId}/cart`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(itemToAdd),
           });
 
           if (!response.ok)
@@ -152,7 +152,6 @@
   }
 
   const changePeople = (delta) => (people = Math.max(1, people + delta));
-  const goToReviews = () => goto(`/reviews/${dish}`);
 </script>
 
 {#if recipe}
@@ -188,11 +187,11 @@
     >
   </div>
 
-  <!-- Ingredients Grid -->
+   <!-- Ingredients Grid -->
   <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 px-4">
     <!-- Ingredients -->
     <div class="p-4 border rounded-lg shadow">
-      <h3 class="text-xl font-bold mb-2">Ingredienten:</h3>
+      <h3 class="text-xl font-bold mb-2">Ingrediënten:</h3>
       <ul>
         {#each recipe.ingredients as ingredient}
           <label class="flex items-center space-x-2 mb-2">
@@ -223,3 +222,10 @@
       <p>{recipe.description}</p>
     </div>
   </div>
+
+ <!-- ReviewSection component -->
+ <ReviewSection {reviews} {averageReview} {userId} {dish} />
+
+ {:else}
+   <p class="text-center">Loading...</p>
+ {/if}
