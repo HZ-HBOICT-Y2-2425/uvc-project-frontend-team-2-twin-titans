@@ -158,7 +158,7 @@
 
   <!-- Recept Afbeelding -->
   <img
-    class="block mx-auto w-full max-h-[250px] sm:max-h-[400px] object-cover rounded-lg shadow-md"
+    class="block mx-auto w-full max-h-[250px] sm:max-h-[400px] object-cover shadow-md"
     src={recipe.image_url || "https://via.placeholder.com/800x400"}
     alt="Recept afbeelding"
   />
