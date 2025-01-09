@@ -38,11 +38,6 @@
       if (!recipesResponse.ok) throw new Error("Failed to fetch data");
       recipes = await recipesResponse.json();
       filteredRecipes = recipes; // Initially show all recipes
-
-      // Log the categories of each recipe
-      recipes.forEach((recipe) => {
-        console.log(`Recipe: ${recipe.name}, Category:`, recipe.category);
-      });
     } catch (err) {
       error = err.message;
     }
@@ -83,10 +78,6 @@
           }
           return unique;
         }, []); // Remove duplicates
-
-      console.log("Unique Categories:", allCategories);
-      console.log("Unique Allergies:", allAllergies);
-      console.log("Unique Seasons:", allSeasons);
 
       // Assign the categories, allergies, and seasons to dropdownContent
       dropdownContent.Categorieën = allCategories.map((category) => ({
@@ -139,8 +130,6 @@
   }
 
   function filterRecipes() {
-    console.log("Filtering recipes with selected filters:", selectedFilters); // Log selected filters
-
     filteredRecipes = recipes.filter((recipe) => {
       const matchesQuery =
         !query ||
@@ -168,9 +157,6 @@
             recipe.season?.some((season) => season.id === selectedSeasonId),
           ));
 
-      console.log(
-        `Recipe: ${recipe.name}, Category Match: ${matchesCategories}`,
-      ); // Log category match
       return matchesQuery && matchesFilters;
     });
   }
