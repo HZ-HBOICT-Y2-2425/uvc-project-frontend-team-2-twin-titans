@@ -9,6 +9,17 @@ export const getData = async (url) => {
     }
 }
 
+export const postData = async (url) => {
+    try {
+        const res = await fetch(url, { method: 'POST'});
+        if (!res.ok) { throw new Error('Gefaald om URL te laden'); }
+        let data = await res.json();
+        return data;
+    } catch (error) {
+        console.error('Error bij het laden:', error);
+    }
+}
+
 export const putData = async (url) => {
     try {
         const res = await fetch(url, { method: 'PUT'});
