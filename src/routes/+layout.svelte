@@ -11,10 +11,10 @@
 
 <header>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <Navbar />
 </header>
 
-<main>
+<main class="sm:mt-0 mt-12">
+    <Navbar />
     <slot />
 </main>
 
