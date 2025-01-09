@@ -32,6 +32,7 @@
   let products = [];
   let error = null;
   let userID;
+  let searchQuery = "";
 
   // Haal de producten op van de API die specifiek door deze gebruiker zijn toegevoegd
   onMount(() => {
@@ -65,12 +66,20 @@
       <span class="text-black">Jouw</span>
       <span class="text-[#69A571]">overblijvers</span>
     </h1>
-    <div class="relative mt-8 w-full max-w-md">
+    <div class="flex items-center max-w-[50%] md:max-w-[30%] mx-auto mt-8">
       <input
         type="text"
-        placeholder="Zoek naar producten..."
-        class="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#69A571]"
+        placeholder="Zoeken..."
+        bind:value={searchQuery}
+        class="border-2 border-gray-400 px-4 py-2 rounded-l w-full focus:border-gray-400 focus:outline-none outline-none border-2 border-r-0"
       />
+      <button
+        class="px-4 py-2 bg-zinc-200 text-black rounded-r border-2 border-gray-400"
+        on:click={() =>
+          goto(`/products?search=${encodeURIComponent(searchQuery)}`)}
+      >
+        Zoeken
+      </button>
     </div>
   </section>
 
@@ -108,6 +117,7 @@
       <div
         class="overflow-y-auto max-h-[600px] border border-gray-300 rounded-lg shadow-lg"
       >
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
           {#each products as product}
             <ProductOverviewCard {product} onViewDetails={viewProductDetails} />

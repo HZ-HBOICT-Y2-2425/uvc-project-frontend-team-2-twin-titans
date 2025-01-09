@@ -151,7 +151,6 @@
         </button>
       {/if}
     {/if}
-
     <p class="mb-2"><strong>Beschrijving:</strong> {product.description}</p>
     <p class="mb-2">
       <strong>Prijs:</strong>

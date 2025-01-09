@@ -38,11 +38,6 @@
       if (!recipesResponse.ok) throw new Error("Failed to fetch data");
       recipes = await recipesResponse.json();
       filteredRecipes = recipes; // Initially show all recipes
-
-      // Log the categories of each recipe
-      recipes.forEach((recipe) => {
-        console.log(`Recipe: ${recipe.name}, Category:`, recipe.category);
-      });
     } catch (err) {
       error = err.message;
     }
@@ -84,10 +79,6 @@
           return unique;
         }, []); // Remove duplicates
 
-      console.log("Unique Categories:", allCategories);
-      console.log("Unique Allergies:", allAllergies);
-      console.log("Unique Seasons:", allSeasons);
-
       // Assign the categories, allergies, and seasons to dropdownContent
       dropdownContent.Categorieën = allCategories.map((category) => ({
         id: category.id,
@@ -102,45 +93,38 @@
     }
   }
 
-  // Handle selecting an option in a dropdown
   function selectFilter(key, item) {
     if (key === "Categorieën") {
-      // Handle category selection by storing category ID
       const selectedCategoryId = item.id;
       if (selectedFilters[key].includes(selectedCategoryId)) {
         selectedFilters[key] = selectedFilters[key].filter(
           (filter) => filter !== selectedCategoryId,
-        ); // Remove the category ID from selected filters
+        );
       } else {
-        selectedFilters[key].push(selectedCategoryId); // Add category ID to selected filters
+        selectedFilters[key].push(selectedCategoryId);
       }
     } else if (key === "Allergieën") {
-      // Handle allergy selection
       if (selectedFilters[key].includes(item.id)) {
         selectedFilters[key] = selectedFilters[key].filter(
           (filter) => filter !== item.id,
-        ); // Remove allergy from selected filters
+        );
       } else {
-        selectedFilters[key].push(item.id); // Add allergy to selected filters
+        selectedFilters[key].push(item.id);
       }
     } else if (key === "Seizoen") {
-      // Handle season selection
       if (selectedFilters[key].includes(item.id)) {
         selectedFilters[key] = selectedFilters[key].filter(
           (filter) => filter !== item.id,
-        ); // Remove season from selected filters
+        );
       } else {
-        selectedFilters[key].push(item.id); // Add season to selected filters
+        selectedFilters[key].push(item.id);
       }
     }
 
-    // After selecting or unselecting a filter, update the filtered recipes
-    filterRecipes();
+    filterRecipes(); // Trigger filtering immediately after selection
   }
 
   function filterRecipes() {
-    console.log("Filtering recipes with selected filters:", selectedFilters); // Log selected filters
-
     filteredRecipes = recipes.filter((recipe) => {
       const matchesQuery =
         !query ||
@@ -168,15 +152,9 @@
             recipe.season?.some((season) => season.id === selectedSeasonId),
           ));
 
-      console.log(
-        `Recipe: ${recipe.name}, Category Match: ${matchesCategories}`,
-      ); // Log category match
       return matchesQuery && matchesFilters;
     });
-
-    console.log("Filtered recipes:", filteredRecipes); // Log the filtered recipes
   }
-
   // Function to toggle a specific dropdown
   function toggleDropdown(key) {
     // Toggle the clicked dropdown while closing others
@@ -195,6 +173,10 @@
         dropdownStates[key] = false; // Close all dropdowns
       }
     }
+  }
+
+  function isItemSelected(key, item) {
+    return selectedFilters[key]?.includes(item.id);
   }
 
   // Attach event listener to document
@@ -231,28 +213,31 @@
 </div>
 
 <!-- Dropdown Menus -->
+
 <div
   class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:max-w-[60%] max-w-[90%] mt-12 mx-auto"
 >
   {#each Object.keys(dropdownStates) as key (key)}
-    <div class="flex items-center justify-center relative">
-      <div class="dropdown">
-        <!-- Dropdown Toggle Button -->
+    <div class="flex flex-col items-center relative">
+      <div class="dropdown w-full">
         <button
-          class="btn px-6 py-3 border-2 border-gray-400 bg-zinc-100 rounded-lg shadow-sm hover:bg-zinc-200 transition-all duration-300 ease-in-out w-full"
+          class="flex items-center justify-between px-4 py-2 border-2 border-gray-400 bg-zinc-100 rounded-lg shadow-sm w-full hover:bg-zinc-200 transition duration-300"
           on:click={() => toggleDropdown(key)}
         >
           {key}
+          <span class="ml-2">▼</span>
         </button>
-
-        <!-- Dropdown Menu -->
         {#if dropdownStates[key]}
           <ul
-            class="absolute bg-white border border-gray-300 rounded-lg shadow-lg mt-2 w-full min-w-[150px] z-10"
+            class="absolute bg-white border border-gray-300 rounded-lg shadow-lg mt-2 w-full z-10"
           >
-            {#each dropdownContent[key] as item (item)}
+            {#each dropdownContent[key] as item (item.id)}
               <li
-                class="px-4 py-2 text-gray-700 hover:bg-gray-200 cursor-pointer transition-all duration-300 ease-in-out"
+                class={`px-4 py-2 cursor-pointer ${
+                  isItemSelected(key, item)
+                    ? "bg-[#69A571] text-white" // Highlight selected items
+                    : "text-gray-700 hover:bg-gray-200" // Default styling
+                } transition duration-300`}
                 on:click={() => selectFilter(key, item)}
               >
                 {item.name}
@@ -264,6 +249,7 @@
     </div>
   {/each}
 </div>
+
 <!-- Recipes Section -->
 <div
   class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mx-auto justify-center max-w-[90%] mt-20"
