@@ -3,7 +3,7 @@
   import { user } from "../../../lib/store"; // Store voor ingelogde gebruiker
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-    import ReviewSection from "$lib/components/review/ReviewSection.svelte";
+  import ReviewSection from "$lib/components/review/ReviewSection.svelte";
 
   const { params } = $page;
   const { dish } = params;
@@ -11,44 +11,44 @@
   let recipe;
   let people = 1;
   let selectedIngredients = [];
-  let userId = null; // Gebruikers-ID
+  let userId = null; // User ID
   let addedToCart = false;
-  let localCart = []; // Lokaal opgeslagen winkelwagen
+  let localCart = []; // Locally stored cart
   let reviews = [];
   let averageReview = {};
 
-  // Controleer of de gebruiker is ingelogd en haal receptgegevens op
+  // Check if user is logged in and fetch recipe data
   onMount(async () => {
     const unsubscribe = user.subscribe((storedUser) => {
       if (storedUser) {
-        userId = storedUser.id; // Haal het gebruikers-ID op
+        userId = storedUser.id; // Get the user ID
       }
     });
 
     await fetchRecipe();
     await fetchReviews();
 
-    // Laad de lokale winkelwagen als deze bestaat
+    // Load the local cart if it exists
     loadLocalCart();
 
     return () => unsubscribe();
   });
 
-  // Recept ophalen
+  // Fetch recipe
   async function fetchRecipe() {
     try {
       const response = await fetch(`http://localhost:3010/recipes/${dish}`);
       if (response.ok) {
         recipe = await response.json();
       } else {
-        console.error("Recept niet gevonden.");
+        console.error("Recipe not found.");
       }
     } catch (error) {
-      console.error("Fout bij ophalen van recept:", error);
+      console.error("Error fetching recipe:", error);
     }
   }
 
-  // Reviews ophalen
+  // Fetch reviews
   async function fetchReviews() {
     try {
       const response = await fetch(
@@ -58,14 +58,14 @@
         reviews = await response.json();
         calculateAverageReview();
       } else {
-        console.error("Fout bij ophalen reviews.");
+        console.error("Error fetching reviews.");
       }
     } catch (error) {
-      console.error("Fout bij ophalen reviews:", error);
+      console.error("Error fetching reviews:", error);
     }
   }
 
-  // Gemiddelde review berekenen
+  // Calculate average review
   function calculateAverageReview() {
     if (!reviews.length) return (averageReview = null);
 
@@ -91,15 +91,15 @@
     };
   }
 
-  // Voeg geselecteerde ingrediënten toe aan winkelwagen
+  // Add selected ingredients to the cart
   async function addToCart() {
     if (!selectedIngredients.length) {
-      alert("Selecteer eerst ingrediënten.");
+      alert("Please select ingredients.");
       return;
     }
 
     if (userId) {
-      // Gebruiker is ingelogd, sla op in database
+      // User is logged in, save to database
       try {
         for (const ingredient of selectedIngredients) {
           const itemToAdd = {
@@ -108,10 +108,10 @@
             unit: ingredient.unit,
           };
 
-          const response = await fetch(`http://localhost:3012/${userId}/cart`, {
+          const queryParams = new URLSearchParams(itemToAdd).toString();
+          const response = await fetch(`http://localhost:3010/user/${userId}/cart?${queryParams}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(itemToAdd),
           });
 
           if (!response.ok)
@@ -121,11 +121,11 @@
         addedToCart = true;
         setTimeout(() => (addedToCart = false), 3000);
       } catch (error) {
-        console.error("Fout bij toevoegen aan winkelwagen:", error);
-        alert("Er is een fout opgetreden bij het toevoegen van de items.");
+        console.error("Error adding to cart:", error);
+        alert("An error occurred while adding items.");
       }
     } else {
-      // Gebruiker is niet ingelogd, sla lokaal op
+      // User is not logged in, save locally
       selectedIngredients.forEach((ingredient) => {
         const itemToAdd = {
           name: ingredient.name,
@@ -135,19 +135,19 @@
         localCart.push(itemToAdd);
       });
 
-      // Opslaan in localStorage
+      // Save to localStorage
       localStorage.setItem("cart", JSON.stringify(localCart));
       addedToCart = true;
       setTimeout(() => (addedToCart = false), 3000);
     }
   }
 
-  // Haal lokale winkelwagen op bij laden
+  // Load local cart when the page is loaded
   function loadLocalCart() {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
       localCart = JSON.parse(storedCart);
-      console.log("Lokaal opgeslagen winkelwagen:", localCart);
+      console.log("Locally stored cart:", localCart);
     }
   }
 
@@ -156,7 +156,7 @@
 </script>
 
 {#if recipe}
-  <!-- Notificatie -->
+  <!-- Notification -->
   {#if addedToCart}
     <div
       class="mt-2 mb-4 p-3 bg-green-500 text-white text-center font-bold rounded shadow-lg"
@@ -165,16 +165,16 @@
     </div>
   {/if}
 
-  <!-- Recept Afbeelding -->
+  <!-- Recipe Image -->
   <img
     class="block mx-auto w-full max-h-[250px] sm:max-h-[400px] object-cover rounded-lg shadow-md"
     src={recipe.image_url || "https://via.placeholder.com/800x400"}
-    alt="Recept afbeelding"
+    alt="Recipe image"
   />
 
   <h1 class="text-3xl sm:text-5xl text-center mt-3 font-bold">{recipe.name}</h1>
 
-  <!-- Personen Selectie -->
+  <!-- People Selection -->
   <div class="flex justify-center items-center mt-4">
     <p class="font-bold mr-2">Personen:</p>
     <button
@@ -188,11 +188,11 @@
     >
   </div>
 
-  <!-- Grid Layout -->
+  <!-- Ingredients Grid -->
   <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 px-4">
-    <!-- Ingrediënten -->
+    <!-- Ingredients -->
     <div class="p-4 border rounded-lg shadow">
-      <h3 class="text-xl font-bold mb-2">Ingrediënten:</h3>
+      <h3 class="text-xl font-bold mb-2">Ingredienten:</h3>
       <ul>
         {#each recipe.ingredients as ingredient}
           <label class="flex items-center space-x-2 mb-2">
@@ -217,16 +217,9 @@
       </button>
     </div>
 
-    <!-- Beschrijving -->
+    <!-- Description -->
     <div class="p-4 border rounded-lg shadow">
       <h2 class="text-2xl font-bold mb-2">Beschrijving</h2>
       <p>{recipe.description}</p>
     </div>
   </div>
-
- <!-- Gebruik de ReviewSection component -->
- <ReviewSection {reviews} {averageReview} {userId} {dish} />
-
- {:else}
-   <p class="text-center">Loading...</p>
- {/if}
