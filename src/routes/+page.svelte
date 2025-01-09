@@ -5,29 +5,7 @@
   import "../app.css";
   import { getData, getDataUrls } from "$lib/dataHandler";
   import ProductOverviewCard from "$lib/components/product/productOverviewCard.svelte";
-
-  let categories = [
-    {
-      title: "Groenten",
-      image: "/images/groenten.png",
-      description: "Verse en gezonde groenten direct van de boer.",
-    },
-    {
-      title: "Zetmeel",
-      image: "/images/zetmeel.png",
-      description: "Producten die zetmeel en granen bevatten.",
-    },
-    {
-      title: "Zuivel",
-      image: "/images/zuivel.png",
-      description: "Biologische melk, kaas en meer.",
-    },
-    {
-      title: "Vlees",
-      image: "/images/eiwitten.png",
-      description: "Lokale en duurzame vleesproducten.",
-    },
-  ];
+  import CO2Output from '$lib/components/co2/CO2Output.svelte';
 
   let products = [];
   let error = null;
@@ -49,7 +27,7 @@
       console.log("Producten van gebruiker:", products);
     }, 100); // 100 milliseconden vertraging
   });
-
+  
   // Navigeer naar de product detailpagina
   const viewProductDetails = (productId) => {
     goto(`/products/${productId}`);
@@ -63,8 +41,8 @@
   >
     <p class="text-gray-500 text-lg">Fuse your Finds, with Hungry Minds</p>
     <h1 class="text-4xl md:text-6xl font-bold">
-      <span class="text-black">Jouw</span>
-      <span class="text-[#69A571]">overblijvers</span>
+      <span class="text-[#69A571]">Producten</span>
+      <span class="text-black">in de buurt</span>
     </h1>
     <div class="flex items-center max-w-[50%] md:max-w-[30%] mx-auto mt-8">
       <input
@@ -83,27 +61,8 @@
     </div>
   </section>
 
-  <!-- Categorieen Section -->
-  <section class="px-4 md:px-16">
-    <h2 class="text-3xl font-bold text-left mb-6">Categorieen</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {#each categories as category}
-        <div
-          class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-        >
-          <img
-            src={category.image}
-            alt={category.title}
-            class="h-60 w-full object-cover"
-          />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">{category.title}</h3>
-            <p class="text-gray-600 text-sm">{category.description}</p>
-          </div>
-        </div>
-      {/each}
-    </div>
-  </section>
+  <!-- Bespaarde CO2 Uitstoot -->
+  <CO2Output />
 
   <!-- Producten van de gebruiker Section -->
   <section class="px-4 md:px-16">

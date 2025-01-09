@@ -15,7 +15,7 @@
     $: currentPath = $page.url.pathname;
 </script>
 
-<div class="flex justify-evenly w-full sm:w-auto text-xs sm:text-sm">
+<div class="flex justify-evenly w-full sm:w-auto text-xs sm:text-sm z-10">
     {#each menuItems as item}
         <button 
             on:click={() => goto(item.href)} 

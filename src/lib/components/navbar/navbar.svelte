@@ -5,14 +5,14 @@
 </script>
 
 <!-- Bovenste balk (alleen voor mobiel) -->
-<div class="sm:hidden fixed top-0 left-0 right-0 flex items-center justify-between" 
+<div class="sm:hidden fixed top-0 left-0 right-0 flex items-center justify-between z-10" 
     style="background-color: rgb(100, 173, 108); padding: 8px 16px; z-index: 10;">
     <NavbarLogo />
     <NavbarProfileDisplay />
 </div>
 
 <!-- Navbar -->
-<nav class="sm:flex sm:items-center sm:justify-between fixed bottom-0 w-full sm:static text-white flex justify-evenly items-center" 
+<nav class="sm:flex sm:items-center sm:justify-between fixed bottom-0 w-full sm:static text-white flex justify-evenly items-center z-10" 
     style="background-color: rgb(100, 173, 108); padding: 8px 16px;">
     
     <!-- Logo en titel (alleen zichtbaar op desktop) -->
