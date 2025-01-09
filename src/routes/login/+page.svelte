@@ -1,6 +1,5 @@
 <script>
     import { user } from "$lib/store";
-    import { loadCart } from "../../stores/cart";  // Zorg ervoor dat we de winkelwagen opnieuw laden
 
     import Form from "$lib/components/input/form.svelte";
     import { areFieldsFilled, assignUserInputToFields, communicateWithApi } from "$lib/components/input/formUtils";

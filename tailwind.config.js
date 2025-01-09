@@ -6,7 +6,11 @@ export default {
     './src/routes/**/*.{html,js,svelte,ts}'
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'custom-green': 'rgb(100, 173, 108)', // Voeg de groene kleur toe
+      },
+    },
   },
   plugins: [],
 }
