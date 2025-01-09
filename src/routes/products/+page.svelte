@@ -10,35 +10,126 @@
   let error = null;
   let searchQuery = ""; // This will hold the search query
 
+  // Dropdown states for filters
+  let dropdownStates = {
+    Categorieën: false,
+    Allergieën: false,
+  };
+
+  // Dropdown content for categories and allergies
+  let dropdownContent = {
+    Categorieën: [],
+    Allergieën: [],
+  };
+
+  let selectedFilters = {
+    Categorieën: [],
+    Allergieën: [],
+  };
+
   // Extract the search query from the URL
   $: searchQuery = $page.url.searchParams.get("search") || "";
 
   // Load product data when the component is mounted
   onMount(async () => {
     try {
+      // Fetch product data
       const productUrls = await getData("http://localhost:3010/products");
-
-      // Load the product details for all products
       const productDetails = await getDataUrls(productUrls);
-
-      // Store the products globally to be filtered later
       products = productDetails.filter(
         (product) => !product.reserved, // Only show products that are not reserved
       );
 
+      // Fetch categories and allergies for dropdowns
+      const categoriesResponse = await fetch(
+        "http://localhost:3010/categories/consumables",
+      );
+      const allergiesResponse = await fetch(
+        "http://localhost:3010/categories/allergies",
+      );
+
+      const categories = await categoriesResponse.json();
+      const allergies = await allergiesResponse.json();
+
+      // Populate the dropdowns with category and allergy data
+      dropdownContent.Categorieën = categories.map((category) => ({
+        id: category.id, // Ensure each category has an id field
+        name: category.name,
+      }));
+
+      dropdownContent.Allergieën = allergies.map((allergy) => ({
+        id: allergy.id,
+        name: allergy.name,
+      }));
+
       isLoading = false;
     } catch (err) {
-      error = "Failed to load products";
+      error = "Failed to load data";
       isLoading = false;
     }
   });
 
-  // Function to filter products based on the search query
   function getFilteredProducts() {
-    return products.filter((product) =>
-      product.title.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    return products.filter((product) => {
+      // Match search query
+      const matchesQuery =
+        !searchQuery ||
+        product.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Match categories (consumables)
+      const matchesCategories =
+        selectedFilters.Categorieën.length === 0 ||
+        selectedFilters.Categorieën.every((selectedCategoryId) =>
+          product.consumables.includes(selectedCategoryId),
+        );
+
+      // Match allergies
+      const matchesAllergies =
+        selectedFilters.Allergieën.length === 0 ||
+        selectedFilters.Allergieën.every((selectedAllergyId) =>
+          product.allergies.includes(selectedAllergyId),
+        );
+
+      // Return true only if all criteria are matched
+      return matchesQuery && matchesCategories && matchesAllergies;
+    });
   }
+
+  function toggleDropdown(key) {
+    for (const dropdown in dropdownStates) {
+      if (dropdown !== key) {
+        dropdownStates[dropdown] = false; // Close other dropdowns
+      }
+    }
+    dropdownStates[key] = !dropdownStates[key]; // Toggle the clicked dropdown
+  }
+
+  // Close all dropdowns when clicking outside
+  function handleClickOutside(event) {
+    if (!event.target.closest(".dropdown")) {
+      for (const key in dropdownStates) {
+        dropdownStates[key] = false; // Close all dropdowns
+      }
+    }
+  }
+
+  function selectFilter(key, item) {
+    const selectedId = item.id; // Use the ID for both categories and allergies
+    if (selectedFilters[key].includes(selectedId)) {
+      selectedFilters[key] = selectedFilters[key].filter(
+        (filter) => filter !== selectedId,
+      );
+    } else {
+      selectedFilters[key] = [...selectedFilters[key], selectedId];
+    }
+  }
+
+  // Attach event listener to document
+  onMount(() => {
+    document.addEventListener("click", handleClickOutside);
+    fetchData();
+    return () => document.removeEventListener("click", handleClickOutside);
+  });
 </script>
 
 <div class="container mx-auto p-4">
@@ -63,6 +154,43 @@
     </button>
   </div>
 
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:max-w-[60%] max-w-[90%] mt-12 mb-4 mx-auto justify-items-center"
+  >
+    {#each Object.keys(dropdownStates) as key (key)}
+      <div class="flex flex-col items-center relative w-full max-w-[200px]">
+        <div class="dropdown w-full">
+          <button
+            class="flex items-center justify-between px-4 py-2 border-2 border-gray-400 bg-zinc-100 rounded-lg shadow-sm w-full hover:bg-zinc-200 transition duration-300 max-w-[250px]"
+            on:click={() => toggleDropdown(key)}
+          >
+            {key}
+            <span class="ml-2">▼</span>
+          </button>
+          {#if dropdownStates[key]}
+            <ul
+              class="absolute bg-white border border-gray-300 rounded-lg shadow-lg mt-2 w-full z-10"
+            >
+              {#each dropdownContent[key] as item (item.id)}
+                <li
+                  class={`px-4 py-2 cursor-pointer ${
+                    selectedFilters[key].includes(item.id)
+                      ? "bg-[#69A571] text-white"
+                      : "text-gray-700 hover:bg-gray-200"
+                  } transition duration-300`}
+                  on:click={() => selectFilter(key, item)}
+                >
+                  {item.name}
+                </li>
+              {/each}
+            </ul>
+          {/if}
+        </div>
+      </div>
+    {/each}
+  </div>
+
+  <!-- Product Listings -->
   {#if isLoading}
     <p class="text-center text-gray-600">Producten worden geladen...</p>
   {:else if error}
