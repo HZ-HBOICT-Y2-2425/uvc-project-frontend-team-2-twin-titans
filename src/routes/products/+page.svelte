@@ -3,11 +3,15 @@
   import { getData, getDataUrls } from "$lib/dataHandler";
   import AddProductBtn from "$lib/components/product/addProductBtn.svelte";
   import IndividualProductBtn from "$lib/components/product/individualProductBtn.svelte";
+  import { page } from "$app/stores"; // SvelteKit's `page` store
 
   let products = [];
   let isLoading = true;
   let error = null;
   let searchQuery = ""; // This will hold the search query
+
+  // Extract the search query from the URL
+  $: searchQuery = $page.url.searchParams.get("search") || "";
 
   // Load product data when the component is mounted
   onMount(async () => {
