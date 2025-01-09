@@ -93,40 +93,35 @@
     }
   }
 
-  // Handle selecting an option in a dropdown
   function selectFilter(key, item) {
     if (key === "Categorieën") {
-      // Handle category selection by storing category ID
       const selectedCategoryId = item.id;
       if (selectedFilters[key].includes(selectedCategoryId)) {
         selectedFilters[key] = selectedFilters[key].filter(
           (filter) => filter !== selectedCategoryId,
-        ); // Remove the category ID from selected filters
+        );
       } else {
-        selectedFilters[key].push(selectedCategoryId); // Add category ID to selected filters
+        selectedFilters[key].push(selectedCategoryId);
       }
     } else if (key === "Allergieën") {
-      // Handle allergy selection
       if (selectedFilters[key].includes(item.id)) {
         selectedFilters[key] = selectedFilters[key].filter(
           (filter) => filter !== item.id,
-        ); // Remove allergy from selected filters
+        );
       } else {
-        selectedFilters[key].push(item.id); // Add allergy to selected filters
+        selectedFilters[key].push(item.id);
       }
     } else if (key === "Seizoen") {
-      // Handle season selection
       if (selectedFilters[key].includes(item.id)) {
         selectedFilters[key] = selectedFilters[key].filter(
           (filter) => filter !== item.id,
-        ); // Remove season from selected filters
+        );
       } else {
-        selectedFilters[key].push(item.id); // Add season to selected filters
+        selectedFilters[key].push(item.id);
       }
     }
 
-    // After selecting or unselecting a filter, update the filtered recipes
-    filterRecipes();
+    filterRecipes(); // Trigger filtering immediately after selection
   }
 
   function filterRecipes() {
@@ -160,7 +155,6 @@
       return matchesQuery && matchesFilters;
     });
   }
-
   // Function to toggle a specific dropdown
   function toggleDropdown(key) {
     // Toggle the clicked dropdown while closing others
