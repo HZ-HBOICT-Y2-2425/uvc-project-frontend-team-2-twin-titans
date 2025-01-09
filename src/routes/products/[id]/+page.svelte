@@ -152,7 +152,7 @@
       {/if}
     {/if}
 
-    <p class="mb-2"><strong>Omschrijving:</strong> {product.description}</p>
+    <p class="mb-2"><strong>Beschrijving:</strong> {product.description}</p>
     <p class="mb-2">
       <strong>Prijs:</strong>
       <span class="text-green-700 font-bold text-xl"
