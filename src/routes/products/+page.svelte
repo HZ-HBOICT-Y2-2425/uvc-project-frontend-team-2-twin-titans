@@ -4,11 +4,14 @@
   import AddProductBtn from "$lib/components/product/addProductBtn.svelte";
   import IndividualProductBtn from "$lib/components/product/individualProductBtn.svelte";
   import { page } from "$app/stores"; // SvelteKit's `page` store
+  import { goto } from "$app/navigation";
+  import ProductOverviewCard from "$lib/components/product/productOverviewCard.svelte";
 
   let products = [];
   let isLoading = true;
   let error = null;
   let searchQuery = ""; // This will hold the search query
+
 
   // Dropdown states for filters
   let dropdownStates = {
@@ -33,11 +36,16 @@
   // Load product data when the component is mounted
   onMount(async () => {
     try {
+      const urlParams = new URLSearchParams(window.location.search);
+      searchQuery = urlParams.get("search") || ""; // Haal de zoekquery uit de URL
+      
       // Fetch product data
       const productUrls = await getData("http://localhost:3010/products");
       const productDetails = await getDataUrls(productUrls);
       products = productDetails.filter(
-        (product) => !product.reserved, // Only show products that are not reserved
+        (product) =>
+          !product.reserved && // Toon alleen producten die niet gereserveerd zijn
+          product.title.toLowerCase().includes(searchQuery.toLowerCase()), // Zoek naar producten die de zoekterm bevatten
       );
 
       // Fetch categories and allergies for dropdowns
@@ -129,12 +137,18 @@
     document.addEventListener("click", handleClickOutside);
     fetchData();
     return () => document.removeEventListener("click", handleClickOutside);
+
   });
+
+  // Functie om details van een product te bekijken (kan later worden gekoppeld aan navigatie)
+  const viewProductDetails = (productId) => {
+    goto(`/products/${productId}`);
+  };
 </script>
 
 <div class="container mx-auto p-4">
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold text-green-600">Producten</h1>
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold text-green-600 mb-4 sm:mb-0">Producten</h1>
     <AddProductBtn />
   </div>
 
@@ -190,7 +204,7 @@
     {/each}
   </div>
 
-  <!-- Product Listings -->
+  <!-- Producten -->
   {#if isLoading}
     <p class="text-center text-gray-600">Producten worden geladen...</p>
   {:else if error}
@@ -200,7 +214,7 @@
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
     >
       {#each getFilteredProducts() as product (product.id)}
-        <IndividualProductBtn {product} />
+        <ProductOverviewCard {product} onViewDetails={viewProductDetails} />
       {/each}
     </div>
   {:else}

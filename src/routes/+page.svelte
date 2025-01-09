@@ -3,6 +3,8 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import "../app.css";
+  import { getData, getDataUrls } from "$lib/dataHandler";
+  import ProductOverviewCard from "$lib/components/product/productOverviewCard.svelte";
 
   let categories = [
     {
@@ -31,27 +33,6 @@
   let error = null;
   let userID;
   let searchQuery = "";
-
-  async function getDataUrls(urls) {
-    return await Promise.all(
-      urls.map(async (url) => {
-        return await getData(`http://localhost:3010/${url}`);
-      }),
-    );
-  }
-
-  const getData = async (url) => {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error("Gefaald om URL te laden");
-      }
-      let data = await res.json();
-      return data;
-    } catch (error) {
-      console.error("Error bij het laden:", error);
-    }
-  };
 
   // Haal de producten op van de API die specifiek door deze gebruiker zijn toegevoegd
   onMount(() => {
@@ -136,46 +117,10 @@
       <div
         class="overflow-y-auto max-h-[600px] border border-gray-300 rounded-lg shadow-lg"
       >
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
           {#each products as product}
-            <div
-              class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-            >
-              <img
-                src={product.image || "https://via.placeholder.com/300"}
-                class="h-60 w-full object-cover"
-              />
-              <div class="p-4">
-                <h3 class="text-lg font-bold text-gray-800">{product.title}</h3>
-                <p class="text-gray-600 text-sm">{product.description}</p>
-                <p class="text-gray-700 font-semibold">
-                  Prijs: €{product.price}
-                </p>
-                <p class="text-gray-500 text-sm">
-                  Aantal: {product.amount}
-                  {product.unit}
-                </p>
-                <p class="text-gray-500 text-sm">
-                  CO2-bijdrage: {product.co2Contribution} kg
-                </p>
-                <p class="text-gray-500 text-sm">
-                  Vervaldatum: {new Date(
-                    product.expirationDate,
-                  ).toLocaleDateString()}
-                </p>
-                {#if product.reserved}
-                  <p class="text-red-500 text-sm">
-                    Gereserveerd door gebruiker {product.reservedByUserID}
-                  </p>
-                {/if}
-                <button
-                  class="mt-4 bg-[#69A571] text-white px-4 py-2 rounded-md"
-                  on:click={() => viewProductDetails(product.id)}
-                >
-                  Bekijk details
-                </button>
-              </div>
-            </div>
+            <ProductOverviewCard {product} onViewDetails={viewProductDetails} />
           {/each}
         </div>
       </div>
@@ -195,13 +140,13 @@
       <h2 class="text-3xl font-bold">Meer over FoodieFuse</h2>
       <p class="text-lg text-gray-600">Fuse your Finds, with Hungry Minds!</p>
       <p class="text-gray-600">
-        <!-- Placeholder for additional text -->
-        Bij FoodieFuse geloven we in de kracht van verbinding en duurzaamheid. Ons
-        platform is er om buurten samen te brengen, mensen te helpen elkaar te ondersteunen
-        en gezamenlijk voedselverspilling tegen te gaan. Heb je een ingrediënt nodig,
-        maar mis je dat ene product in je keukenkastje? Geen zorgen! Met FoodieFuse
-        kun je eenvoudig in contact komen met buren die het wel in huis hebben, zodat
-        je jouw kookplannen niet hoeft te wijzigen.
+        Bij FoodieFuse geloven we in de kracht van verbinding en duurzaamheid.
+        Ons platform is er om buurten samen te brengen, mensen te helpen elkaar
+        te ondersteunen en gezamenlijk voedselverspilling tegen te gaan. Heb je
+        een ingrediënt nodig, maar mis je dat ene product in je keukenkastje?
+        Geen zorgen! Met FoodieFuse kun je eenvoudig in contact komen met buren
+        die het wel in huis hebben, zodat je jouw kookplannen niet hoeft te
+        wijzigen.
         <br /><br />
         Wij vinden het belangrijk om lokale gemeenschappen te versterken en tegelijkertijd
         onze impact op het milieu te verkleinen. Door producten te delen, verminderen

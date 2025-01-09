@@ -130,13 +130,15 @@
   <p class="text-center text-red-600">{error}</p>
 {:else if product}
   <div
-    class="product-detail max-w-4xl mx-auto p-8 bg-gray-100 border border-gray-300 rounded-lg shadow-lg mt-8"
+    class="max-w-4xl mx-auto p-8 bg-white border border-gray-200 rounded-lg shadow-md mt-8"
   >
-    <h1 class="text-2xl font-bold text-green-700 mb-4">{product.title}</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">{product.title}</h1>
     <img
-      src="https://via.placeholder.com/800x400"
+      src={product.image
+        ? `http://localhost:3010/products/product/image/${product.image}`
+        : "https://via.placeholder.com/800x400"}
       alt={product.title}
-      class="w-full h-auto rounded-lg mb-4"
+      class="w-full h-auto rounded-lg mb-4 border-2 border-gray rounded-md"
     />
 
     {#if seller}
@@ -149,8 +151,7 @@
         </button>
       {/if}
     {/if}
-
-    <p class="mb-2"><strong>Omschrijving:</strong> {product.description}</p>
+    <p class="mb-2"><strong>Beschrijving:</strong> {product.description}</p>
     <p class="mb-2">
       <strong>Prijs:</strong>
       <span class="text-green-700 font-bold text-xl"
@@ -172,7 +173,7 @@
     </p>
 
     {#if distance !== null}
-      <p class="mt-4"><strong>Afstand naar verkoper:</strong> {distance}</p>
+      <p class="mt-4"><strong>Afstand naar verkoper:</strong> {distance} km</p>
     {/if}
 
     {#if $user === null}
