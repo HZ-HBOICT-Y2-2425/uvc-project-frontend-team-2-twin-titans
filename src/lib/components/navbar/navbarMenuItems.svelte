@@ -1,11 +1,12 @@
 <script>
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
+    import '@fortawesome/fontawesome-free/css/all.css';
 
     let menuItems = [
         { name: "Home", href: "/", icon: "fa-home" },
-        { name: "Producten", href: "/products", icon: "fa-leaf" },
-        { name: "Uw producten", href: "/your-products", icon: "fa-leaf" },
+        { name: "Marktplaats", href: "/products", icon: "fa-store" },
+        { name: "Mijn Producten", href: "/your-products", icon: "fa-leaf" },
         { name: "Recepten", href: "/dishes", icon: "fa-cutlery" },
         { name: "Mandje", href: "/cart", icon: "fa-shopping-basket" },
     ];
