@@ -3,7 +3,7 @@
   import { getData, getDataUrls } from "$lib/dataHandler";
   import AddProductBtn from "$lib/components/product/addProductBtn.svelte";
   import IndividualProductBtn from "$lib/components/product/individualProductBtn.svelte";
-  import ProductFilter from "$lib/components/filter/productFilter.svelte";
+  import ProductFilter from "$lib/components/filter/ProductsFilter.svelte";
   import { page } from "$app/stores"; // SvelteKit's `page` store
   import { goto } from "$app/navigation";
   import ProductOverviewCard from "$lib/components/product/productOverviewCard.svelte";
@@ -205,22 +205,21 @@
   </div>
 
   <!-- Producten -->
-  {#if isLoading}
-    <p class="text-center text-gray-600 mt-8">Producten worden geladen...</p>
-  {:else if error}
-    <p class="text-center text-red-600">{error}</p>
-  {:else if getFilteredProducts().length > 0}
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-    >
-      {#each getFilteredProducts() as product (product.id)}
-        <ProductOverviewCard {product} onViewDetails={viewProductDetails} />
-      {/each}
-    </div>
-  {:else}
-    <div class="container mx-auto p-4">
-      <!-- Producten worden via de Filter component gefilterd en weergegeven! -->
-      <ProductFilter {products} />
-    </div>
-  {/if}
+   <!-- Producten -->
+   {#if isLoading}
+   <p class="text-center text-gray-600">Producten worden geladen...</p>
+ {:else if error}
+   <p class="text-center text-red-600">{error}</p>
+ {:else if getFilteredProducts().length > 0}
+   <div
+     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+   >
+     {#each getFilteredProducts() as product (product.id)}
+       <ProductOverviewCard {product} onViewDetails={viewProductDetails} />
+     {/each}
+   </div>
+ {:else}
+   <p class="text-center text-gray-600">Geen producten gevonden...</p>
+ {/if}
 </div>
+
