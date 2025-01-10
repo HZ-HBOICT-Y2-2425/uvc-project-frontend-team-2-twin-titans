@@ -9,22 +9,23 @@
 
   let products = [];
   let error = null;
-  let userID;
+  let userID = null;
   let searchQuery = "";
 
   // Haal de producten op van de API die specifiek door deze gebruiker zijn toegevoegd
   onMount(() => {
     setTimeout(async () => {
-      userID = $user?.id || 1; // Gebruik een fallback van 1 als de userID niet beschikbaar is
-      console.log("Gebruiker ID:", userID);
+      if ($user) {
+        userID = $user.id;
+        console.log("Gebruiker ID:", userID);
+        const productsUrls = await getData(
+          `http://localhost:3010/products/user/${userID}`,
+        );
 
-      const productsUrls = await getData(
-        `http://localhost:3010/products/user/${userID}`,
-      );
+        products = await getDataUrls(productsUrls);
 
-      products = await getDataUrls(productsUrls);
-
-      console.log("Producten van gebruiker:", products);
+        console.log("Producten van gebruiker:", products);
+      }
     }, 100); // 100 milliseconden vertraging
   });
   
