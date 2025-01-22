@@ -23,6 +23,7 @@ export async function communicateWithApi(url, callMethod, redirect = '/') {
         let data = await res.json();
         user.set(data);
         goto(redirect);
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
         succesful = false;
     }
