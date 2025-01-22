@@ -1,15 +1,28 @@
-import react from 'eslint-plugin-react';
+import pluginReact from "eslint-plugin-react";  // Verwijder deze regel
 
-export default {
-  plugins: ['react'],
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: 'module',
-  },
-  settings: {
-    react: {
-      version: 'detect', // Dit zorgt ervoor dat de juiste React-versie wordt gedetecteerd
+export default [
+  {
+    files: ["**/*.{js,mjs,cjs,jsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.jest,
+      },
+    },
+    settings: {
+      // Verwijder het react gedeelte als je geen React gebruikt
+      react: {
+        version: "detect",
+      },
+    },
+    plugins: {
+      // Verwijder de plugin als je geen React gebruikt
+      // react: pluginReact,
+    },
+    rules: {
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     },
   },
-};
+  pluginJs.configs.recommended,
+];
