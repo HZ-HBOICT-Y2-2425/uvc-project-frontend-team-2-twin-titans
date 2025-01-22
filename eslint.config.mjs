@@ -26,10 +26,6 @@ export default [
       "no-unused-vars": "off", // Schakel 'no-unused-vars' uit
       "no-self-assign": "off", // Schakel 'no-self-assign' uit
       "no-empty": "off", // Schakel 'no-empty' uit
-      "no-useless-escape": "off", // Schakel 'no-useless-escape' uit
-      "@typescript-eslint/require-await": "off", // Schakel '@typescript-eslint/require-await' uit
-      "no-constant-condition": "off", // Schakel 'no-constant-condition' uit voor de gegenereerde code
-      "no-control-regex": "off" // Schakel 'no-control-regex' uit
     },
   },
   pluginJs.configs.recommended, // Basisregels voor JavaScript
