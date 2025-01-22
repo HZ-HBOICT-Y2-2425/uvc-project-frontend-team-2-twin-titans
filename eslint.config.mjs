@@ -1,5 +1,3 @@
-import pluginReact from "eslint-plugin-react";  // Verwijder deze regel
-
 export default [
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],
